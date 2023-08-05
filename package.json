@@ -1,0 +1,54 @@
+{
+  "name": "css-variant",
+  "version": "0.0.0",
+  "description": "Fully typesafe CSS variant utility",
+  "license": "MIT",
+  "type": "module",
+  "author": {
+    "name": "Antoine Fourès",
+    "url": "https://afoures.com",
+    "email": "contact@afoures.com"
+  },
+  "scripts": {
+    "prepare": "npm run build",
+    "build": "tsc --project tsconfig.build.json --outDir ./dist",
+    "typecheck": "tsc --project tsconfig.json --noEmit",
+    "test": "vitest",
+    "lint": "echo \"Not implemented yet\"",
+    "format": "prettier --write \"src/**/*.ts\""
+  },
+  "homepage": "https://github.com/afoures/css-variant#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/afoures/css-variant.git"
+  },
+  "keywords": [
+    "css",
+    "variant"
+  ],
+  "bugs": {
+    "url": "https://github.com/afoures/css-variant/issues"
+  },
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "dependencies": {
+    "type-fest": "^4.1.0"
+  },
+  "devDependencies": {
+    "prettier": "^3.0.1",
+    "typescript": "^5.1.6",
+    "vitest": "^0.34.1"
+  },
+  "sideEffects": false,
+  "engines": {
+    "node": ">=14"
+  }
+}
