@@ -1,5 +1,3 @@
-import type { SetOptional } from "type-fest";
-
 type StringToPrimitive<T> = T extends "true" | "false"
 	? boolean
 	: T extends "null"
@@ -8,6 +6,7 @@ type StringToPrimitive<T> = T extends "true" | "false"
 	? undefined
 	: T;
 type NonEmptyArray<T> = [T, ...T[]];
+type Simplify<T> = { [KeyType in keyof T]: T[KeyType] } & {};
 
 type AcceptedCSSClasses = string | Array<string>;
 
@@ -15,7 +14,7 @@ export type Config<
 	Variations extends Record<string, Record<string, AcceptedCSSClasses>>,
 	Defaults extends keyof Variations,
 	Optionals extends keyof Variations,
-> = {
+> = Simplify<{
 	base?: AcceptedCSSClasses;
 	variations: Variations;
 	defaults?: { [Key in Defaults]?: StringToPrimitive<keyof Variations[Key]> };
@@ -29,14 +28,19 @@ export type Config<
 				| (Optionals extends Key ? undefined : never);
 		};
 	}>;
-};
+}>;
 
-export type PropsFromConfig<T> = T extends Config<infer Variations, infer Defaults, infer Optionals>
-	? SetOptional<
-			{ [Key in keyof Variations]: StringToPrimitive<keyof Variations[Key]> },
-			Defaults | Optionals
-	  >
-	: never;
+type Props<
+	Variations extends Record<string, Record<string, AcceptedCSSClasses>>,
+	Defaults extends keyof Variations,
+	Optionals extends keyof Variations,
+> = Simplify<
+	{
+		[Key in Exclude<keyof Variations, Defaults | Optionals>]: StringToPrimitive<
+			keyof Variations[Key]
+		>;
+	} & { [Key in Optionals | Defaults]?: StringToPrimitive<keyof Variations[Key]> }
+>;
 
 export type VariantProps<VariantFn extends (...args: any) => any> = Parameters<VariantFn>[0];
 
@@ -52,9 +56,7 @@ export function createVariantUtility(
 			(key) => !config.optional?.includes(key as any),
 		);
 
-		function match(
-			props: PropsFromConfig<Config<Variations, Defaults, Optionals>>,
-		): string | undefined {
+		function match(props: Props<Variations, Defaults, Optionals>): string | undefined {
 			const input = {
 				...config.defaults,
 				...props,

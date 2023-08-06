@@ -39,9 +39,6 @@
     },
     "./package.json": "./package.json"
   },
-  "dependencies": {
-    "type-fest": "^4.1.0"
-  },
   "devDependencies": {
     "prettier": "^3.0.1",
     "typescript": "^5.1.6",
